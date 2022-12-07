@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JIbiEzW0OipPEL7GNanX+xfjwOE8nf7Y8ENSEK2+cncjO4EXYl2e/n4xBQUIqcImEz3kOdlyRLhVm077BEZKFg==",
+  "dgSpecHash": "cfenYEr1a97aaoECcOY3EWCqKkd+Ur47BcI691cF8vd3g7OOgLkCA8ZFkGCeJQU1BKvErbGVHo5kN6SRKCP3jA==",
   "success": true,
-  "projectFilePath": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/CityInfo.API/CityInfo.API.csproj",
+  "projectFilePath": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/PointsOfInterests/CityInfo.API/CityInfo.API.csproj",
   "expectedPackageFiles": [
     "/Users/jordantaylor/.nuget/packages/automapper/12.0.0/automapper.12.0.0.nupkg.sha512",
     "/Users/jordantaylor/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.0/automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/CityInfo.API/CityInfo.API.csproj": {}
+    "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/PointsOfInterests/CityInfo.API/CityInfo.API.csproj": {}
   },
   "projects": {
-    "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/CityInfo.API/CityInfo.API.csproj": {
+    "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/PointsOfInterests/CityInfo.API/CityInfo.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/CityInfo.API/CityInfo.API.csproj",
+        "projectUniqueName": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/PointsOfInterests/CityInfo.API/CityInfo.API.csproj",
         "projectName": "CityInfo.API",
-        "projectPath": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/CityInfo.API/CityInfo.API.csproj",
+        "projectPath": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/PointsOfInterests/CityInfo.API/CityInfo.API.csproj",
         "packagesPath": "/Users/jordantaylor/.nuget/packages/",
-        "outputPath": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/CityInfo.API/obj/",
+        "outputPath": "/Users/jordantaylor/Desktop/Development/teach-your-self-cs/Programming/C#/asp-dot-net-core-6-web-api-fundamentals/02/demos/end/PointsOfInterests/CityInfo.API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jordantaylor/.nuget/NuGet/NuGet.Config"
