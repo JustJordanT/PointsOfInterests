@@ -10,5 +10,6 @@ public class CityProfile : Profile
     {
         CreateMap<Entities.City, Models.CityWithoutPointsOfInterestDto>();
         CreateMap<Entities.City, Models.CityDto>();
+        CreateMap<Models.CityCreationDto, Entities.City>();
     }
 }

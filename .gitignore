@@ -10,6 +10,10 @@
 .idea/**/shelf
 .idea/*
 
+
+./CityInfo.API/obj/*
+./CityInfo.API/bin/*
+.bin/*
 # Generated files
 .idea/**/contentModel.xml
 

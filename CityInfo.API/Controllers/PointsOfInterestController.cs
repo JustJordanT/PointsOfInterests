@@ -2,12 +2,16 @@ using AutoMapper;
 using CityInfo.API.Models;
 using CityInfo.API.Services;
 using CityInfo.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.API.Controllers;
 
-[Route("api/cities/{cityId}/pointsofinterest")]
+[Route("api/v{version:apiVersion}/cities/{cityId}/pointsofinterest")]
+// [Authorize(Policy = "MustBeFromUSA")]
+// [Authorize]
+[ApiVersion("2.0")]
 [ApiController]
 public class PointsOfInterestController : ControllerBase
 {
@@ -35,6 +39,15 @@ public class PointsOfInterestController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PointOfInterestDto>>> GetPointsOfInterest(int cityId, CancellationToken cancellationToken)
     {
+        
+        // TODO Would need to correct this for this towork data does not have a country field
+        // var cityName = User.Claims.FirstOrDefault(c => c.Type == "Country")?.Value;
+        //
+        // if (!await _cityInfoRepository.CityNameMatchesCityId(cityName, cityId))
+        // {
+        //     return Forbid();
+        // }
+        
         if (!await _cityInfoRepository.CityExistsAsync(cityId))
         {
             _logger.LogInformation($"City with id {cityId} wasn't found when accessing points of interest.");

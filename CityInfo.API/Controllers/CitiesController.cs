@@ -1,12 +1,18 @@
 using AutoMapper;
 using CityInfo.API.Models;
 using CityInfo.API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CityInfo.API.Controllers;
 
 [ApiController]
-[Route("api/cities")]
+// [Authorize]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/cities")]
 public class CitiesController : ControllerBase
 {
     private static ICityInfoRepository _cityInfoRepository;
@@ -29,14 +35,27 @@ public class CitiesController : ControllerBase
     
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(string? name,
+    public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
+        string? name,
         string? searchQuery,
         CancellationToken cancellationToken,
         int pageSize = maxCitiersPageSize,
-        int page = 1)
+        int pageNumber = 1)
     {
-        var cities = await _cityInfoRepository.GetCitiesAsync(name, searchQuery, cancellationToken);
-        return Ok(_mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cities));
+        if (pageSize > maxCitiersPageSize)
+            pageSize = maxCitiersPageSize;
+        
+        var (citiesEntities, paginationMetadata) = await _cityInfoRepository.GetCitiesAsync(
+            name,
+            searchQuery,
+            pageSize,
+            pageNumber,
+            cancellationToken);
+        // TODO look into this further, HEADERS not showing up.
+        Response.Headers.Add("X-Pagination",
+            JsonSerializer.Serialize(paginationMetadata));
+        
+        return Ok(_mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(citiesEntities));
     }
 
     [HttpGet("{id}")]
@@ -50,5 +69,16 @@ public class CitiesController : ControllerBase
             return NotFound();
        
         return includePointsOfInterest ? Ok(_mapper.Map<CityDto>(city)) : Ok(_mapper.Map<CityWithoutPointsOfInterestDto>(city));
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    public async Task<ActionResult<CityDto>> CreateCity(CityCreationDto city, CancellationToken cancellationToken)
+    {
+        var finalCity = _mapper.Map<CityCreationDto>(city);
+
+        await _cityInfoRepository.AddCityAsync(finalCity, cancellationToken);
+        // TODO do we want to return the id of the city?
+        return CreatedAtAction(nameof(GetCities), new { name = finalCity.Name }, finalCity );
     }
 }

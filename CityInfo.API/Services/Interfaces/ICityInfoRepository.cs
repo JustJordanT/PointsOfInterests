@@ -1,14 +1,19 @@
+using System.Security.Claims;
 using CityInfo.API.Entities;
+using CityInfo.API.Models;
 
 namespace CityInfo.API.Services.Interfaces;
 
-public interface ICityInfoRepository
+public partial interface ICityInfoRepository
 {
     Task<IEnumerable<City>> GetCitiesAsync(CancellationToken cancellationToken);
-    Task<IEnumerable<City>> GetCitiesAsync(
+    Task<(IEnumerable<City>, PaginationMetadata)> GetCitiesAsync(
         string? name,
         string? searchQuery,
+        int pageSize,
+        int pageNumber,
         CancellationToken cancellationToken);
+
     Task<City?> GetCityByIdAsync(
         int cityId,
         bool includePointsOfInterest,
@@ -22,7 +27,14 @@ public interface ICityInfoRepository
         CancellationToken cancellationToken);
     
     Task AddPointOfInterestForCityAsync(int cityId, PointOfInterest pointOfInterest, CancellationToken cancellationToken);
+
+    Task AddCityAsync(CityCreationDto city, CancellationToken cancellationToken);
+    
+    Task<bool> CityNameMatchesCityId(string cityName, int cityId);
+    
     Task<bool> SaveChangesAsync();
+
+    public Task SaveDBChangesAsync(CancellationToken cancellationToken);
 
     void DeletePointOfInterest(PointOfInterest pointOfInterest);
     // TODO Clean up this overload method we could just have the cancellationToken be nullable

@@ -3,27 +3,28 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace CityInfo.API.Controllers;
 
-[Route("api/files")]
+[Route("api/logs")]
 [ApiController]
-public class FileController : ControllerBase
+public class LogsController : ControllerBase
 {
     private readonly FileExtensionContentTypeProvider _fileExtensionContentTypeProvider;
 
-    public FileController(FileExtensionContentTypeProvider fileExtensionContentTypeProvider)
+    public LogsController(FileExtensionContentTypeProvider fileExtensionContentTypeProvider)
     {
         _fileExtensionContentTypeProvider 
             = fileExtensionContentTypeProvider 
               ?? throw new System.ArgumentNullException(nameof(fileExtensionContentTypeProvider));
     }
     
-    [HttpGet("{fileId}")]
-    public async Task<IActionResult> Get(int fileId)
+    [HttpGet("{filedate}")]
+    public async Task<IActionResult> Get(int filedate)
     {
-        var pathToFile = "Monolith to Microservices Evolutionary Patterns to Transform Your Monolith by Sam Newman .pdf";
+        var pathToFile = $"./logs/cityinfo{filedate}.txt";
 
         if (!System.IO.File.Exists(pathToFile))
         {
-            return NotFound();
+            // return NotFound();
+            return NotFound("No date found, date must be entered as yyyymmdd");
         }
 
         if (!_fileExtensionContentTypeProvider.TryGetContentType(pathToFile, out var contentType))

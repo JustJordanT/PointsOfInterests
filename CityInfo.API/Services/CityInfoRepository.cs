@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using CityInfo.API.DbContext;
 using CityInfo.API.Entities;
+using CityInfo.API.Models;
 using CityInfo.API.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,17 +20,15 @@ public class CityInfoRepository : ICityInfoRepository
     {
         return await _context.Cities.OrderBy(c => c.Name).ToListAsync(cancellationToken: cancellationToken);
     }
-    public async Task<IEnumerable<City>> GetCitiesAsync(
-        string? name,
+    public async Task<(IEnumerable<City>, PaginationMetadata)> GetCitiesAsync(string? name,
         string? searchQuery,
+        int pageSize,
+        int pageNumber,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(name) && string.IsNullOrWhiteSpace(searchQuery))
-            return await GetCitiesAsync(cancellationToken);
-
         // collection to start from
         var collection = _context.Cities as IQueryable<City>;
-
+        
 
         if (!string.IsNullOrWhiteSpace(name))
         {
@@ -36,7 +36,7 @@ public class CityInfoRepository : ICityInfoRepository
             collection = collection.Where(c => c.Name == name);
         }
 
-        // TODO: How would be add lucine filtering with dotnet.
+        // TODO: How to add lucine filtering with dotnet.
         if (!string.IsNullOrWhiteSpace(searchQuery))
         {
             searchQuery = searchQuery.Trim();
@@ -47,7 +47,20 @@ public class CityInfoRepository : ICityInfoRepository
                              c.Description.Contains(searchQuery)));
         }
 
-        return await collection.OrderBy(c => c.Name).ToListAsync(cancellationToken: cancellationToken);
+        var totalItemCount = await collection.CountAsync();
+
+        var paginationMetadata = new PaginationMetadata(
+            totalItemCount,
+            pageSize,
+            pageNumber);
+        
+        var collectionToReturn = await collection
+            .OrderBy(c => c.Name)
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
+        
+        return (collectionToReturn, paginationMetadata);
 
     }
 
@@ -83,6 +96,16 @@ public class CityInfoRepository : ICityInfoRepository
            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
     }
 
+    public async Task AddCityAsync(CityCreationDto city, CancellationToken cancellationToken)
+    {
+        var newCity = new City(city.Name)
+        {
+            Description = city.Description
+        };
+        _context.Cities.Add(newCity);
+        await SaveDBChangesAsync(cancellationToken);
+    }
+    
     public async Task AddPointOfInterestForCityAsync(int cityId, PointOfInterest pointOfInterest, CancellationToken cancellationToken)
     {
         var city = await GetCityByIdAsync(cityId, false, cancellationToken);
@@ -93,9 +116,24 @@ public class CityInfoRepository : ICityInfoRepository
         city?.PointsOfInterest.Add(pointOfInterest);
     }
 
+    public Task AddCityAsync(CityDto city, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> CityNameMatchesCityId(string cityName, int cityId)
+    {
+        return await _context.Cities.AnyAsync(c => c.Id == cityId && c.Name == cityName);
+    }
+
     public async Task<bool> SaveChangesAsync()
     {
         return await _context.SaveChangesAsync() >= 0;
+    }
+
+    public async Task SaveDBChangesAsync(CancellationToken cancellationToken)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public void DeletePointOfInterest(PointOfInterest pointOfInterest)
